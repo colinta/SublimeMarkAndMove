@@ -4,7 +4,9 @@ import sublime_plugin
 
 class MarkAndMoveSaveCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        if not self.view.mark_and_move_marks:
+        try:
+            self.view.mark_and_move_marks
+        except AttributeError:
             self.view.mark_and_move_marks = []
 
         regions = [region for region in self.view.sel()]
@@ -27,7 +29,9 @@ class MarkAndMoveSaveCommand(sublime_plugin.TextCommand):
 
 class MarkAndMoveRotateCommand(sublime_plugin.TextCommand):
     def rotate(self, edit, direction):
-        if not self.view.mark_and_move_marks:
+        try:
+            self.view.mark_and_move_marks
+        except AttributeError:
             return
 
         for current_region in self.view.sel():
@@ -65,8 +69,11 @@ class MarkAndMovePrevCommand(MarkAndMoveRotateCommand):
 
 class MarkAndMoveRecallCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        if not self.view.mark_and_move_marks:
+        try:
+            self.view.mark_and_move_marks
+        except AttributeError:
             return
+
         self.view.sel().clear()
         for region in self.view.mark_and_move_marks:
             self.view.sel().add(region)
@@ -76,7 +83,10 @@ class MarkAndMoveRecallCommand(sublime_plugin.TextCommand):
 
 class MarkAndMoveClearCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        if not self.view.mark_and_move_marks:
+        try:
+            self.view.mark_and_move_marks
+        except AttributeError:
             return
+
         self.view.mark_and_move_marks = []
         self.view.erase_regions('mark_and_move')
