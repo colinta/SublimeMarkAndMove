@@ -2,25 +2,43 @@ import sublime
 import sublime_plugin
 
 
+class MarkAndMoveListener(sublime_plugin.EventListener):
+    def __init__(self):
+        self.previous = None
+        super(MarkAndMoveListener, self).__init__()
+
+    def on_modified(self, view):
+        mark_and_move_marks = view.get_regions('mark_and_move')
+        print mark_and_move_marks
+
+        if not mark_and_move_marks:
+            return
+
+        content = view.substr(sublime.Region(0, view.size()))
+
+        # if self.previous:
+        #     print content
+        self.previous = content
+
+
 class MarkAndMoveSaveCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        try:
-            self.view.mark_and_move_marks
-        except AttributeError:
-            self.view.mark_and_move_marks = []
+        mark_and_move_marks = self.view.get_regions('mark_and_move')
 
         regions = [region for region in self.view.sel()]
         for region in regions:
-            self.view.mark_and_move_marks.append(region)
+            mark_and_move_marks.append(region)
 
         # sort by region.end() ASC
         def compare(region_a, region_b):
             return cmp(region_a.begin(), region_b.begin())
-        self.view.mark_and_move_marks.sort(compare)
+        mark_and_move_marks.sort(compare)
+        print self, self.view, self.view.file_name()
+        print mark_and_move_marks
 
         self.view.add_regions(
           'mark_and_move',
-          self.view.mark_and_move_marks,
+          mark_and_move_marks,
           'entity.name.class',
           'dot',
           sublime.DRAW_OUTLINED
@@ -29,20 +47,19 @@ class MarkAndMoveSaveCommand(sublime_plugin.TextCommand):
 
 class MarkAndMoveRotateCommand(sublime_plugin.TextCommand):
     def rotate(self, edit, direction):
-        try:
-            self.view.mark_and_move_marks
-        except AttributeError:
+        mark_and_move_marks = self.view.get_regions('mark_and_move')
+        if not mark_and_move_marks:
             return
 
         for current_region in self.view.sel():
             break
 
         if direction > 0:
-            next_region = self.view.mark_and_move_marks[0]
-            find = self.view.mark_and_move_marks
+            next_region = mark_and_move_marks[0]
+            find = mark_and_move_marks
         else:
-            next_region = self.view.mark_and_move_marks[-1]
-            find = self.view.mark_and_move_marks[::-1]
+            next_region = mark_and_move_marks[-1]
+            find = mark_and_move_marks[::-1]
 
         for test_region in find:
             if direction > 0 and test_region.begin() > current_region.begin():
@@ -69,24 +86,22 @@ class MarkAndMovePrevCommand(MarkAndMoveRotateCommand):
 
 class MarkAndMoveRecallCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        try:
-            self.view.mark_and_move_marks
-        except AttributeError:
+        mark_and_move_marks = self.view.get_regions('mark_and_move')
+        if not mark_and_move_marks:
             return
 
         self.view.sel().clear()
-        for region in self.view.mark_and_move_marks:
+        for region in mark_and_move_marks:
             self.view.sel().add(region)
-        self.view.mark_and_move_marks = []
+        mark_and_move_marks = []
         self.view.erase_regions('mark_and_move')
 
 
 class MarkAndMoveClearCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        try:
-            self.view.mark_and_move_marks
-        except AttributeError:
+        mark_and_move_marks = self.view.get_regions('mark_and_move')
+        if not mark_and_move_marks:
             return
 
-        self.view.mark_and_move_marks = []
+        mark_and_move_marks = []
         self.view.erase_regions('mark_and_move')
