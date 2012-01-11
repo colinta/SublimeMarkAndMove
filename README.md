@@ -7,6 +7,10 @@ Allows for keyboard-only multiple selections.  Select some stuff, mark it, then 
 Installation
 ------------
 
+1. Using Package Control, install "MarkAndMove"
+
+Or:
+
 1. Open the Sublime Text 2 Packages folder
 
     - OS X: ~/Library/Application Support/Sublime Text 2/Packages/
