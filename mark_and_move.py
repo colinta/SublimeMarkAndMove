@@ -9,15 +9,11 @@ class MarkAndMoveListener(sublime_plugin.EventListener):
 
     def on_modified(self, view):
         mark_and_move_marks = view.get_regions('mark_and_move')
-        print mark_and_move_marks
 
         if not mark_and_move_marks:
             return
 
         content = view.substr(sublime.Region(0, view.size()))
-
-        # if self.previous:
-        #     print content
         self.previous = content
 
 
@@ -33,8 +29,6 @@ class MarkAndMoveSaveCommand(sublime_plugin.TextCommand):
         def compare(region_a, region_b):
             return cmp(region_a.begin(), region_b.begin())
         mark_and_move_marks.sort(compare)
-        print self, self.view, self.view.file_name()
-        print mark_and_move_marks
 
         self.view.add_regions(
           'mark_and_move',
