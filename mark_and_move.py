@@ -39,6 +39,12 @@ class MarkAndMoveSaveCommand(sublime_plugin.TextCommand):
         )
 
 
+class MarkAndMoveSaveAndRecallCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        self.view.run_command('mark_and_move_save')
+        self.view.run_command('mark_and_move_recall', {"clear": False})
+
+
 class MarkAndMoveRotateCommand(sublime_plugin.TextCommand):
     def rotate(self, edit, direction):
         mark_and_move_marks = self.view.get_regions('mark_and_move')
@@ -79,7 +85,7 @@ class MarkAndMovePrevCommand(MarkAndMoveRotateCommand):
 
 
 class MarkAndMoveRecallCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
+    def run(self, edit, clear=True):
         mark_and_move_marks = self.view.get_regions('mark_and_move')
         if not mark_and_move_marks:
             return
@@ -88,7 +94,8 @@ class MarkAndMoveRecallCommand(sublime_plugin.TextCommand):
         for region in mark_and_move_marks:
             self.view.sel().add(region)
         mark_and_move_marks = []
-        self.view.erase_regions('mark_and_move')
+        if clear:
+            self.view.erase_regions('mark_and_move')
 
 
 class MarkAndMoveClearCommand(sublime_plugin.TextCommand):
