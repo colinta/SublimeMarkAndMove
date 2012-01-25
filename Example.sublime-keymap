@@ -1,0 +1,7 @@
+[
+    { "keys": ["ctrl+m"], "command": "mark_and_move_save_and_recall" },
+    { "keys": ["alt+m"], "command": "mark_and_move_next" },
+    { "keys": ["alt+shift+m"], "command": "mark_and_move_prev" },
+    { "keys": ["ctrl+shift+m"], "command": "mark_and_move_save" },
+    { "keys": ["ctrl+alt+m"], "command": "mark_and_move_clear" }
+]
