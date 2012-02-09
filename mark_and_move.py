@@ -125,7 +125,8 @@ class MarkAndMoveDoItAllCommand(sublime_plugin.TextCommand):
                     return True
             return False
 
-        if len(self.view.sel()) > 1 and all(region_in(region, self.view.sel()) for region in mark_and_move_marks):
+        if len(self.view.sel()) > 1 and len(self.view.sel()) == len(mark_and_move_marks) \
+                                    and all(region_in(region, mark_and_move_marks) for region in self.view.sel()):
             self.view.run_command('mark_and_move_clear')
         elif any(not region_in(region, mark_and_move_marks) for region in self.view.sel()):
             self.view.run_command('mark_and_move_save')
