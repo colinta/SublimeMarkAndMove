@@ -1,5 +1,5 @@
 [
-    { "keys": ["ctrl+shift+tab"], "command": "mark_and_move_window_mark" },
+    { "keys": ["ctrl+shift+tab"], "command": "mark_and_move_window_select" },
     { "keys": ["ctrl+tab"], "command": "mark_and_move_window_toggle" },
     { "keys": ["ctrl+m"], "command": "mark_and_move_do_it_all" },
     { "keys": ["alt+m"], "command": "mark_and_move_next" },

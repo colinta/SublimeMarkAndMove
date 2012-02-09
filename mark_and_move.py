@@ -7,7 +7,7 @@ class MarkAndMoveWindowCommand(sublime_plugin.WindowCommand):
     mark_and_move_views = {}
 
 
-class MarkAndMoveWindowMarkCommand(MarkAndMoveWindowCommand):
+class MarkAndMoveWindowSelectCommand(MarkAndMoveWindowCommand):
     def run(self, goto=True):
         view = self.window.active_view()
         my_id = view.id()
@@ -51,7 +51,7 @@ class MarkAndMoveWindowToggleCommand(MarkAndMoveWindowCommand):
             goto_view = self.mark_and_move_views[view.id()]
             self.window.focus_view(goto_view)
         else:
-            self.window.run_command('mark_and_move_window_mark', {'goto': True})
+            self.window.run_command('mark_and_move_window_select', {'goto': True})
 
 
 class MarkAndMoveSaveCommand(sublime_plugin.TextCommand):

@@ -47,6 +47,6 @@ So `ctrl+m` like crazy, and on the last one press `ctrl+m` twice, once to add it
 WindowCommands
 --------------
 
-`mark_and_move_window_mark`: Displays a picker so that you can bind two open files.  The two files must already be open.  Once the files are bound, opens the other file (`goto`: False disables the "auto-goto")
+`mark_and_move_window_select`: Displays a picker so that you can bind two open files.  The two files must already be open.  Once the files are bound, opens the other file (`goto`: False disables the "auto-goto")
 
-`mark_and_move_window_toggle`: If the current view is bound, it goes to the other view.  If it isn't bound, this command delegates to `mark_and_move_window_mark`.
+`mark_and_move_window_toggle`: If the current view is bound, it goes to the other view.  If it isn't bound, this command delegates to `mark_and_move_window_select`.
