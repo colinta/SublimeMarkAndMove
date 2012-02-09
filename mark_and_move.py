@@ -1,5 +1,57 @@
+import os
 import sublime
 import sublime_plugin
+
+
+class MarkAndMoveWindowCommand(sublime_plugin.WindowCommand):
+    mark_and_move_views = {}
+
+
+class MarkAndMoveWindowMarkCommand(MarkAndMoveWindowCommand):
+    def run(self, goto=True):
+        view = self.window.active_view()
+        my_id = view.id()
+        files = []
+        views = []
+        contents = []
+        untitled_count = 1
+        for v in view.window().views():
+            if v.id() != my_id:
+                this_content = v.substr(sublime.Region(0, v.size()))
+                views.append(v)
+                if v.file_name():
+                    files.append(v.file_name())
+                elif v.name():
+                    files.append(v.name())
+                else:
+                    files.append('untitled %d' % untitled_count)
+                    untitled_count += 1
+
+                contents.append(this_content)
+
+        def on_done(index):
+            if index > -1 and len(views) > index:
+                goto_view = views[index]
+                self.mark_and_move_views[view.id()] = goto_view
+                self.mark_and_move_views[goto_view.id()] = view
+                if goto:
+                    self.window.focus_view(goto_view)
+
+        if len(files) == 1:
+            on_done(0)
+        else:
+            menu_items = [os.path.basename(f) for f in files]
+            view.window().show_quick_panel(menu_items, on_done)
+
+
+class MarkAndMoveWindowToggleCommand(MarkAndMoveWindowCommand):
+    def run(self, *args, **kwargs):
+        view = self.window.active_view()
+        if view.id() in self.mark_and_move_views:
+            goto_view = self.mark_and_move_views[view.id()]
+            self.window.focus_view(goto_view)
+        else:
+            self.window.run_command('mark_and_move_window_mark', {'goto': True})
 
 
 class MarkAndMoveSaveCommand(sublime_plugin.TextCommand):
