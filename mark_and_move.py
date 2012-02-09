@@ -50,6 +50,10 @@ class MarkAndMoveWindowToggleCommand(MarkAndMoveWindowCommand):
         if view.id() in self.mark_and_move_views:
             goto_view = self.mark_and_move_views[view.id()]
             self.window.focus_view(goto_view)
+            if self.window.active_view().id() != goto_view.id():
+                del self.mark_and_move_views[view.id()]
+                del self.mark_and_move_views[goto_view.id()]
+                self.window.run_command('mark_and_move_window_select', {'goto': True})
         else:
             self.window.run_command('mark_and_move_window_select', {'goto': True})
 
