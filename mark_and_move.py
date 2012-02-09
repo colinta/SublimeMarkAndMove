@@ -2,21 +2,6 @@ import sublime
 import sublime_plugin
 
 
-class MarkAndMoveListener(sublime_plugin.EventListener):
-    def __init__(self):
-        self.previous = None
-        super(MarkAndMoveListener, self).__init__()
-
-    def on_modified(self, view):
-        mark_and_move_marks = view.get_regions('mark_and_move')
-
-        if not mark_and_move_marks:
-            return
-
-        content = view.substr(sublime.Region(0, view.size()))
-        self.previous = content
-
-
 class MarkAndMoveSaveCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         mark_and_move_marks = self.view.get_regions('mark_and_move')
