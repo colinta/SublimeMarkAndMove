@@ -32,3 +32,14 @@ Commands
 
 `mark_and_move_clear`: Removes the marks, but doesn't affect cursor position.
 
+And the command with the mostest:
+
+`mark_and_move_do_it_all`: Adds, recalls, and clears marks using one command.
+
+The logic is this:
+
+1. If the cursor(s) are not in the set of marks, add it (`mark_and_move_save`).
+2. If *some* of the cursors are in the set, but not *all*, recall the marks (`mark_and_move_recall`)
+3. If *all* the marks are already selected, clear them and leave the cursors (`mark_and_move_clear`)
+
+So `ctrl+m` like crazy, and on the last one press `ctrl+m` twice, once to add it and once to select the marks.  Then press it a third time and *WHOOSH* the marks are cleared, ready to start anew.

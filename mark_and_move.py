@@ -24,10 +24,61 @@ class MarkAndMoveSaveCommand(sublime_plugin.TextCommand):
         )
 
 
+class MarkAndMoveRecallCommand(sublime_plugin.TextCommand):
+    def run(self, edit, clear=False):
+        mark_and_move_marks = self.view.get_regions('mark_and_move')
+        if not mark_and_move_marks:
+            return
+
+        self.view.sel().clear()
+        for region in mark_and_move_marks:
+            self.view.sel().add(region)
+
+        if clear:
+            mark_and_move_marks = []
+            self.view.erase_regions('mark_and_move')
+
+
 class MarkAndMoveSaveAndRecallCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
+    def run(self, edit, clear=False):
         self.view.run_command('mark_and_move_save')
-        self.view.run_command('mark_and_move_recall', {"clear": False})
+        self.view.run_command('mark_and_move_recall', {"clear": clear})
+
+
+class MarkAndMoveClearCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        mark_and_move_marks = self.view.get_regions('mark_and_move')
+        if not mark_and_move_marks:
+            return
+
+        mark_and_move_marks = []
+        self.view.erase_regions('mark_and_move')
+
+
+class MarkAndMoveDoItAllCommand(sublime_plugin.TextCommand):
+    """
+    If there is one region, and it is already in mark_and_move_marks, all marks are selected.
+    If there are multiple selections and all of them are in mark_and_move_marks, all marks are removed.
+    Otherwise all marks added.
+
+    Makes it easy to have 'mark_and_move_save', 'mark_and_move_recall', and 'mark_and_move_clear' bound
+    to the same command.
+    """
+    def run(self, edit):
+        mark_and_move_marks = self.view.get_regions('mark_and_move')
+
+        def region_in(region, marks):
+            for mark in marks:
+                if region.begin() == mark.begin() and region.end() == mark.end():
+                    return True
+            return False
+
+        if len(self.view.sel()) > 1 and all(region_in(region, self.view.sel()) for region in mark_and_move_marks):
+            self.view.run_command('mark_and_move_clear')
+        elif any(not region_in(region, mark_and_move_marks) for region in self.view.sel()):
+            self.view.run_command('mark_and_move_save')
+        else:
+            self.view.run_command('mark_and_move_recall', {"clear": False})
 
 
 class MarkAndMoveRotateCommand(sublime_plugin.TextCommand):
@@ -67,28 +118,3 @@ class MarkAndMoveNextCommand(MarkAndMoveRotateCommand):
 class MarkAndMovePrevCommand(MarkAndMoveRotateCommand):
     def run(self, edit):
         return self.rotate(edit, -1)
-
-
-class MarkAndMoveRecallCommand(sublime_plugin.TextCommand):
-    def run(self, edit, clear=False):
-        mark_and_move_marks = self.view.get_regions('mark_and_move')
-        if not mark_and_move_marks:
-            return
-
-        self.view.sel().clear()
-        for region in mark_and_move_marks:
-            self.view.sel().add(region)
-
-        if clear:
-            mark_and_move_marks = []
-            self.view.erase_regions('mark_and_move')
-
-
-class MarkAndMoveClearCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        mark_and_move_marks = self.view.get_regions('mark_and_move')
-        if not mark_and_move_marks:
-            return
-
-        mark_and_move_marks = []
-        self.view.erase_regions('mark_and_move')
