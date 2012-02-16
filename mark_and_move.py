@@ -13,11 +13,9 @@ class MarkAndMoveWindowSelectCommand(MarkAndMoveWindowCommand):
         my_id = view.id()
         files = []
         views = []
-        contents = []
         untitled_count = 1
         for v in view.window().views():
             if v.id() != my_id:
-                this_content = v.substr(sublime.Region(0, v.size()))
                 views.append(v)
                 if v.file_name():
                     files.append(v.file_name())
@@ -26,8 +24,6 @@ class MarkAndMoveWindowSelectCommand(MarkAndMoveWindowCommand):
                 else:
                     files.append('untitled %d' % untitled_count)
                     untitled_count += 1
-
-                contents.append(this_content)
 
         def on_done(index):
             if index > -1 and len(views) > index:
