@@ -4,12 +4,91 @@ import sublime_plugin
 
 
 class MarkAndMoveWindowCommand(sublime_plugin.WindowCommand):
-    mark_and_move_views = {}
+    mark_and_move_views = {}  # links view_id => goto_view_id
+    mark_and_move_files = {}  # links view_id => file_name
+    mark_and_move_selections = {}
+    # 2207 => [2201, 2202]
+    # mark_and_move_selections_2207_2201
+    # mark_and_move_selections_2207_2202
+
+    def remember_file_name(self, view, file_name):
+        ids = [view_id for view_id in self.mark_and_move_files if self.mark_and_move_files[view_id] == file_name]
+        if ids:
+            new_view_id = view.id()
+            old_view_id = ids[0]
+
+            self.fix_ids(new_view_id, old_view_id)
+
+    def lookup_view(self, from_view, goto_view_id):
+        goto_view = None
+        goto_views = [check_view for check_view in self.window.views() if check_view.id() == goto_view_id]
+        if goto_views:
+            goto_view = goto_views[0]
+        elif goto_view_id in self.mark_and_move_files:
+            file_name = self.mark_and_move_files[goto_view_id]
+            if os.path.isfile(file_name):
+                goto_view = self.window.open_file(file_name)
+
+            if goto_view is None:
+                return
+
+            del self.mark_and_move_files[goto_view_id]
+            self.mark_and_move_files[goto_view.id()] = file_name
+
+            self.fix_ids(goto_view.id(), goto_view_id, from_view)
+        return goto_view
+
+    def fix_ids(self, new_view_id, old_view_id, from_view=None):
+        # correct the views if they have different ids
+        if new_view_id != old_view_id:
+            if old_view_id in self.mark_and_move_views:
+                self.mark_and_move_views[new_view_id] = self.mark_and_move_views[old_view_id]
+                del self.mark_and_move_views[old_view_id]
+
+            if from_view:
+                for from_id, to_ids in self.mark_and_move_selections.iteritems():
+                    new_ids = []
+                    for to_id in to_ids:
+                        if to_id == old_view_id:
+                            new_ids.append(new_view_id)
+                            from_view_id = from_view.id()
+                            key = 'mark_and_move_selections_%i_%i' % (from_view_id, old_view_id)
+                            new_key = 'mark_and_move_selections_%i_%i' % (from_view_id, new_view_id)
+                            new_regions = from_view.get_regions(key)
+                            from_view.add_regions(
+                                new_key,
+                                new_regions,
+                                'source',
+                                '',
+                                sublime.HIDDEN
+                                )
+                            from_view.erase_regions(key)
+                        else:
+                            new_ids.append(to_id)
+                    self.mark_and_move_selections[from_id] = new_ids
+            else:
+                # delete all selections that refer to old_view_id if the from_view is not given
+                # this happens during remember_file_name()
+                if old_view_id in self.mark_and_move_selections:
+                    del self.mark_and_move_selections[old_view_id]
+                for from_id, to_ids in self.mark_and_move_selections.iteritems():
+                    new_ids = []
+                    for to_id in to_ids:
+                        if to_id == old_view_id:
+                            new_ids.append(to_id)
+                    self.mark_and_move_selections[from_id] = new_ids
+
+            for from_id, to_id in self.mark_and_move_views.iteritems():
+                if to_id == old_view_id:
+                    self.mark_and_move_views[from_id] = new_view_id
 
 
 class MarkAndMoveWindowSelectCommand(MarkAndMoveWindowCommand):
     def run(self, goto=True):
         view = self.window.active_view()
+        if view.file_name():
+            self.mark_and_move_files[view.id()] = view.file_name()
+
         my_id = view.id()
         files = []
         views = []
@@ -28,8 +107,33 @@ class MarkAndMoveWindowSelectCommand(MarkAndMoveWindowCommand):
         def on_done(index):
             if index > -1 and len(views) > index:
                 goto_view = views[index]
-                self.mark_and_move_views[view.id()] = goto_view
-                self.mark_and_move_views[goto_view.id()] = view
+
+                if goto_view.id() not in self.mark_and_move_views:
+                    self.mark_and_move_views[goto_view.id()] = view.id()
+                    if goto_view.file_name():
+                        self.mark_and_move_files[goto_view.id()] = goto_view.file_name()
+
+                if all(region.empty() for region in view.sel()):
+                    self.mark_and_move_views[view.id()] = goto_view.id()
+                else:
+                    # TODO: detect and remove overlapping regions
+                    if view.id() not in self.mark_and_move_selections:
+                        self.mark_and_move_selections[view.id()] = []
+
+                    self.mark_and_move_selections[view.id()].append(goto_view.id())
+
+                    regions = filter(bool, view.sel())
+                    # add existing regions
+                    key = 'mark_and_move_selections_%i_%i' % (view.id(), goto_view.id())
+                    regions.extend(view.get_regions(key))
+                    view.add_regions(
+                        key,
+                        regions,
+                        'source',
+                        '',
+                        sublime.HIDDEN
+                        )
+
                 if goto:
                     self.window.focus_view(goto_view)
 
@@ -43,13 +147,32 @@ class MarkAndMoveWindowSelectCommand(MarkAndMoveWindowCommand):
 class MarkAndMoveWindowToggleCommand(MarkAndMoveWindowCommand):
     def run(self, *args, **kwargs):
         view = self.window.active_view()
-        if view.id() in self.mark_and_move_views:
-            goto_view = self.mark_and_move_views[view.id()]
-            self.window.focus_view(goto_view)
-            if self.window.active_view().id() != goto_view.id():
-                del self.mark_and_move_views[view.id()]
-                del self.mark_and_move_views[goto_view.id()]
-                self.window.run_command('mark_and_move_window_select', {'goto': True})
+
+        if view.file_name() and any(view.id() != view_id and view.file_name() == file_name for view_id, file_name in self.mark_and_move_files.iteritems()):
+            self.remember_file_name(view, view.file_name())
+
+        view_id = view.id()
+        cursor = view.sel()[0].b
+        if view_id in self.mark_and_move_selections:
+            for goto_view_id in self.mark_and_move_selections[view_id]:
+                key = 'mark_and_move_selections_%i_%i' % (view_id, goto_view_id)
+                check_regions = view.get_regions(key)
+                for check_region in check_regions:
+                    if check_region.contains(cursor):
+                        goto_view = self.lookup_view(view, goto_view_id)
+                        if goto_view is not None:
+                            self.window.focus_view(goto_view)
+                            return
+
+        if all(region.empty() for region in view.sel()) and view_id in self.mark_and_move_views:
+            goto_view_id = self.mark_and_move_views[view_id]
+            goto_view = self.lookup_view(view, goto_view_id)
+            if goto_view is not None:
+                self.window.focus_view(goto_view)
+                if self.window.active_view().id() != goto_view.id():
+                    del self.mark_and_move_views[view_id]
+                    del self.mark_and_move_views[goto_view.id()]
+                    self.window.run_command('mark_and_move_window_select', {'goto': True})
         else:
             self.window.run_command('mark_and_move_window_select', {'goto': True})
 

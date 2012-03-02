@@ -62,6 +62,22 @@ Then press it a third time and *WHOOSH* the marks are cleared, ready to start an
 WindowCommands
 --------------
 
-`mark_and_move_window_select`: Displays a picker so that you can bind two open files.  The two files must already be open.  Once the files are bound, opens the other file (`goto`: False disables the "auto-goto")
+`mark_and_move_window_select`
 
-`mark_and_move_window_toggle`: If the current view is bound, it goes to the other view.  If it isn't bound, this command delegates to `mark_and_move_window_select`.
+Displays a picker so that you can bind two open files.  The other file will be opened. `goto: false` disables this feature.
+The first time you do this, the two files will be bound to each other.  However, if the other file is *already bound*, it will not
+be bound to the current view.  You can create "rings" this way, or have multiple files point to one file.
+
+If you have some text selected, it will bind those regions. For example, you might bind a django `views.py` file to the corresponding `models.py`,
+but you could bind specific view functions to templates, so depending on where the cursor is located you will go to a different file.
+
+Bindings are stored on the window, so as long as you don't close the project, you should retain your bindings.
+
+`mark_and_move_window_toggle`
+
+If the current view is bound, it goes to the other view.  If it isn't bound, this command delegates to `mark_and_move_window_select`.
+
+TODO
+----
+
+* Have file-to-file bindings persist between sessions.  Can this be stored in a project config?
