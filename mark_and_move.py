@@ -70,7 +70,7 @@ class MarkAndMoveSaveCommand(sublime_plugin.TextCommand):
         self.view.add_regions(
           'mark_and_move',
           mark_and_move_marks,
-          'entity.name.class',
+          'source',
           'dot',
           sublime.DRAW_OUTLINED
         )
@@ -140,21 +140,20 @@ class MarkAndMoveRotateCommand(sublime_plugin.TextCommand):
         if not mark_and_move_marks:
             return
 
-        for current_region in self.view.sel():
-            break
+        current_region = self.view.sel()[0]
 
         if direction > 0:
             next_region = mark_and_move_marks[0]
             find = mark_and_move_marks
         else:
             next_region = mark_and_move_marks[-1]
-            find = mark_and_move_marks[::-1]
+            find = mark_and_move_marks[::-1]  # reversed
 
         for test_region in find:
-            if direction > 0 and test_region.begin() > current_region.begin():
+            if direction > 0 and test_region != current_region and test_region.begin() >= current_region.begin():
                 next_region = test_region
                 break
-            elif direction < 0 and test_region.begin() < current_region.begin():
+            elif direction < 0 and test_region != current_region and test_region.begin() <= current_region.begin():
                 next_region = test_region
                 break
 

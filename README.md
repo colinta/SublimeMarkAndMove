@@ -19,22 +19,35 @@ Or:
 
 2. clone this repo
 
+
 TextCommands
 ------------
 
-`mark_and_move_save`: Adds the current selection or cursor position to the list of marks.
+`mark_and_move_save`
 
-`mark_and_move_next`: Moves to the next mark.  "Next mark" is defined as the first mark after the first current region, or the first mark if none are found (aka wraps).
+Adds the current selection or cursor position to the list of marks.
 
-`mark_and_move_prev`: Moves to the previous mark.  "Previous mark" is defined as the first mark before the first current region, or the last mark if none are found (aka wraps).
+`mark_and_move_next`
 
-`mark_and_move_recall`: Selects and clears all the marks.
+Moves to the next mark.  "Next mark" is defined as the first mark after the first current region, or the first mark if none are found (aka wraps).
 
-`mark_and_move_clear`: Removes the marks, but doesn't affect cursor position.
+`mark_and_move_prev`
+
+Moves to the previous mark.  "Previous mark" is defined as the first mark before the first current region, or the last mark if none are found (aka wraps).
+
+`mark_and_move_recall`
+
+Selects and clears all the marks.
+
+`mark_and_move_clear`
+
+Removes the marks, but doesn't affect cursor position.
 
 And the command with the mostest:
 
-`mark_and_move_do_it_all`: Adds, recalls, and clears marks using one command.
+`mark_and_move_do_it_all`
+
+Adds, recalls, and clears marks using one command.
 
 The logic is this:
 
@@ -42,7 +55,9 @@ The logic is this:
 2. If *some* of the cursors are in the set, but not *all*, recall the marks (`mark_and_move_recall`)
 3. If *all* the marks are already selected, clear them and leave the cursors (`mark_and_move_clear`)
 
-So `ctrl+m` like crazy, and on the last one press `ctrl+m` twice, once to add it and once to select the marks.  Then press it a third time and *WHOOSH* the marks are cleared, ready to start anew.
+So `ctrl+m` like crazy, and on the last one press `ctrl+m` twice, once to add it and once to select the marks.
+Then press it a third time and *WHOOSH* the marks are cleared, ready to start anew.
+
 
 WindowCommands
 --------------
