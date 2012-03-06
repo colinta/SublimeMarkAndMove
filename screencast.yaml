@@ -1,0 +1,192 @@
+- write:
+  - "<?php\n\n# 1) "
+  - write_inside: [ "`", "bracketeer_indent", "`" ]
+  - ":\n"
+  - |
+    #    I wrote this command so that
+    #    indentation works how I like it when writing html templates.
+    #    I like to have <?php and {% %} tags fixed at column zero
+    ?>
+
+- write:
+  - |-
+    <html>
+    <?php
+      echo
+  - ' '
+  - write_inside: [ "'", "some stuff", "'" ]
+  - |
+      ;
+      ?>
+  - write_inside: [ "{% ", "block content", " %}" ]
+  - write: "\n"
+  - |-
+      <h1>title</h1>
+      <?php
+        echo
+  - ' '
+  - write_inside: [ "'", "will indent", "'" ]
+  - ";\n?>\n  "
+  - write_inside: [ "{% ", "comment", " %}" ]
+  - "this, too"
+  - write_inside: [ "{% ", "endcomment", " %}" ]
+  - "\n"
+  - write_inside: [ "{% ", "endblock", " %}" ]
+  - "\n</html>\n"
+
+- clear: {}
+- write: |-
+    <?php
+
+    # 2)
+- write: ' '
+- write_inside: [ "`", "bracketeer_select", "`" ]
+- write: ":\n"
+- write: |-
+    #    This command is used to select inside brackets.  First it
+    #    selects the contents, then adds the brackets, and then
+    #    the contents of the next brackets, and so on. Makes it
+    #    easy to edit argument lists.
+
+- write_inside:
+  - "{ "
+  - write_inside:
+    - "[ "
+    - write_inside:
+      - "( "
+      - set_mark
+      - write_inside: ["'", "inside", "'"]
+      - " )"
+    - " ]"
+  - " }"
+- delay: 300
+- goto_mark
+- run_command: ['bracketeer_select', {}]
+
+
+- write: |
+    # 3) `bracketeer_goto` jumps to one bracket or the other.  **Or both!**
+    #    This was specifically purposed to remove brackets in one-line ifs.
+
+- wait: |
+    if ( TRUE )
+    {
+      echo 'TRUE';
+    }
+    else
+    {
+      echo 'FALSE';
+    }
+
+- clear: {}
+
+- write: |
+    <?php
+
+    # 4) `bracketeer`.  The namesake command!
+    #    I'll try and remember all the stuff I do with this command.
+
+- write: |
+    #  * output matching quotes.  the first quote will print two quotes,
+    #    the last quote will advance the cursor past the matching quote
+
+- wait: |
+    "some stuff"
+    'some stuff'
+    {[('nesting "quotes" and "brackets", too?')]}  # yup!
+
+- clear: {}
+
+- write: |
+    <?php
+
+    # I don't know if this is a bug or feature, but pressing the quote
+    # character at the *beginning* of the string will also skip past it.
+    # this is not the case with brackets and smart quotes.
+
+- wait: |
+    "for example"
+    'for example'
+    `for example`
+
+- write: |
+    # it only applies for brackets that use the same character for
+    # opening and closing.
+
+- wait: |
+    { nope }
+    “ nope ”
+    ( not me either )
+
+- write: |
+    # the example keymap file has lots of quotes — as many as I could
+    # think of:
+
+- wait: |
+    “”
+    ‘’
+    «»
+    ‹›
+    ``
+
+- clear: {}
+
+- write: |
+    <?php
+
+    # since this is *my* custom quote/bracket algorithm, I've
+    # taken a lot of pains to have apostrophes work right:"
+- wait: |
+    "I'm inside double quotes, so single quote is an apostrophe"
+    # When you're inside a comment, too
+    'double "quotes" always match'
+
+- write: |
+    # and look, you can escape quotes!  this used to drive me crazy."
+
+- wait: |
+    "\"\"\""
+
+- write: |
+    # one small bug.  you can delete the final quote, leaving a trailing
+    # string, and when you go to close that string, it will *sometimes* print two
+    # quotes.  If you are at the end of the line, you will get a closing quote"
+
+- wait: |
+    'example'
+    "example"
+
+- clear: {}
+
+- write: |
+    <?php
+
+    # you are not limited to single quotes.  I have key bindings for
+    # triple quoted strings, too"
+
+- wait: |
+    """
+    like this
+    """
+              """
+              and they get indented
+              """
+
+- write: |
+    # and for markdown:"
+
+- wait: |
+    ```html
+    "<p>tab key moves from syntax to content</p>"
+    ```
+
+- write: |
+    # lastly, backspace deletes both quotes if
+    # they are right next to each other"
+
+- wait: |
+    ''
+    ""
+    []
+    ()
+    ( )
