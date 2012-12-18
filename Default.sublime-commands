@@ -18,5 +18,13 @@
   {
     "caption": "Mark And Move: Clear",
     "command": "mark_and_move_clear"
+  },
+  {
+    "caption": "Mark And Move Window: Next",
+    "command": "mark_and_move_window"
+  },
+  {
+    "caption": "Mark And Move Window: Link to Tab",
+    "command": "mark_and_move_select_window"
   }
 ]
