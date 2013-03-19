@@ -187,8 +187,8 @@ class MarkAndMoveSaveCommand(sublime_plugin.TextCommand):
 
         # sort by region.end() ASC
         def get_end(region):
-            return region.end
-        mark_and_move_marks.sort(key=get_end)
+            return region.end()
+        mark_and_move_marks.sort(key=get_end, reverse=True)
 
         self.view.add_regions(
           'mark_and_move',
