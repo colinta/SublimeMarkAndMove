@@ -186,9 +186,9 @@ class MarkAndMoveSaveCommand(sublime_plugin.TextCommand):
             mark_and_move_marks.append(region)
 
         # sort by region.end() ASC
-        def compare(region_a, region_b):
-            return cmp(region_a.begin(), region_b.begin())
-        mark_and_move_marks.sort(compare)
+        def get_end(region):
+            return region.end
+        mark_and_move_marks.sort(key=get_end)
 
         self.view.add_regions(
           'mark_and_move',
