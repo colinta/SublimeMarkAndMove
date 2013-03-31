@@ -29,6 +29,8 @@ is created.
 
 ![example](https://f.cloud.github.com/assets/168193/295050/8ab0536c-9446-11e2-86cf-a99e02067ee9.gif)
 
+Thank you to @paradox460 for creating this GIF!
+
 TextCommands
 ------------
 
