@@ -20,6 +20,14 @@ Or:
 2. clone this repo
 3. Install keymaps for the commands (see Example.sublime-keymap for my preferred keys)
 
+Example
+-------
+
+In this video you can watch the user create 3 cursors (using `ctrl+m`), then
+activate those three cursors by pressing `ctrl+m` again after the third cursor
+is created.
+
+![example](https://f.cloud.github.com/assets/168193/295050/8ab0536c-9446-11e2-86cf-a99e02067ee9.gif)
 
 TextCommands
 ------------
