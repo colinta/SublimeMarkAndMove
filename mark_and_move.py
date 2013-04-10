@@ -122,7 +122,7 @@ class MarkAndMoveWindowSelectCommand(MarkAndMoveWindowCommand):
 
                     self.mark_and_move_selections[view.id()].append(goto_view.id())
 
-                    regions = filter(bool, view.sel())
+                    regions = list(filter(bool, view.sel()))
                     # add existing regions
                     key = 'mark_and_move_selections_%i_%i' % (view.id(), goto_view.id())
                     regions.extend(view.get_regions(key))
@@ -181,14 +181,8 @@ class MarkAndMoveSaveCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         mark_and_move_marks = self.view.get_regions('mark_and_move')
 
-        regions = [region for region in self.view.sel()]
-        for region in regions:
+        for region in self.view.sel():
             mark_and_move_marks.append(region)
-
-        # sort by region.end() ASC
-        def get_end(region):
-            return region.end()
-        mark_and_move_marks.sort(key=get_end, reverse=True)
 
         self.view.add_regions(
           'mark_and_move',
