@@ -2,6 +2,6 @@
   "repo": "SublimeMarkAndMove",
   "name": "MarkAndMove",
   "description": "Allows for keyboard-only multiple selections.  Select some stuff, mark it, then move the cursor around and add more marks, recall marks, or move between marks.",
-  "author": "Colin Thomas-Arnold (colinta)",
+  "author": "Colin T.A. Gray (colinta)",
   "homepage": "https://github.com/colinta/SublimeMarkAndMove"
 }
