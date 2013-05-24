@@ -148,7 +148,7 @@ class MarkAndMoveWindowToggleCommand(MarkAndMoveWindowCommand):
     def run(self, *args, **kwargs):
         view = self.window.active_view()
 
-        if view.file_name() and any(view.id() != view_id and view.file_name() == file_name for view_id, file_name in self.mark_and_move_files.iteritems()):
+        if view.file_name() and any(view.id() != view_id and view.file_name() == file_name for view_id, file_name in self.mark_and_move_files.items()):
             self.remember_file_name(view, view.file_name())
 
         view_id = view.id()
