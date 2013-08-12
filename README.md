@@ -1,5 +1,5 @@
-MarkAndMove for Sublime Text 2
-==============================
+MarkAndMove
+===========
 
 Allows for keyboard-only multiple selections.  Select some stuff, mark it, then move the cursor around and add more marks, recall marks, or move between marks.
 
@@ -7,27 +7,25 @@ Allows for keyboard-only multiple selections.  Select some stuff, mark it, then 
 Installation
 ------------
 
-### Sublime Text 2
-
 1. Using Package Control, install "MarkAndMove"
 
 Or:
 
-1. Open the Sublime Text 2 Packages folder
+1. Open the Sublime Text Packages folder
 
-    - OS X: ~/Library/Application Support/Sublime Text 2/Packages/
-    - Windows: %APPDATA%/Sublime Text 2/Packages/
-    - Linux: ~/.Sublime Text 2/Packages/
+    - OS X: ~/Library/Application Support/Sublime Text 3/Packages/
+    - Windows: %APPDATA%/Sublime Text 3/Packages/
+    - Linux: ~/.Sublime Text 3/Packages/
 
 2. clone this repo
 3. Install keymaps for the commands (see Example.sublime-keymap for my preferred keys)
 
-### Sublime Text 3
+### Sublime Text 2
 
 1. Open the Sublime Text 2 Packages folder
-2. clone this repo, but use the `st3` branch
+2. clone this repo, but use the `st2` branch
 
-       git clone -b st3 git@github.com:colinta/SublimeMarkAndMove
+       git clone -b st2 git@github.com:colinta/SublimeMarkAndMove
 
 Example
 -------
