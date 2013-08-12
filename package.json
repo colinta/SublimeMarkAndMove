@@ -6,7 +6,7 @@
   "labels": ["file navigation"],
   "releases": [
     {
-      "details": "https://github.com/colinta/SublimeMarkAndMove/tree/master",
+      "details": "https://github.com/colinta/SublimeMarkAndMove/tree/st2",
       "sublime_text": "<3000"
     },
     {
