@@ -3,7 +3,6 @@ MarkAndMove
 
 Allows for keyboard-only multiple selections.  Select some stuff, mark it, then move the cursor around and add more marks, recall marks, or move between marks.
 
-
 Installation
 ------------
 
@@ -12,10 +11,9 @@ Installation
 Or:
 
 1. Open the Sublime Text Packages folder
-
     - OS X: ~/Library/Application Support/Sublime Text 3/Packages/
     - Windows: %APPDATA%/Sublime Text 3/Packages/
-    - Linux: ~/.Sublime Text 3/Packages/
+    - Linux: ~/.Sublime Text 3/Packages/ or ~/.config/sublime-text-3/Packages
 
 2. clone this repo
 3. Install keymaps for the commands (see Example.sublime-keymap for my preferred keys)
@@ -82,12 +80,9 @@ WindowCommands
 
 `mark_and_move_window_select`
 
-Displays a picker so that you can bind two open files.  The other file will be opened. `goto: false` disables this feature.
-The first time you do this, the two files will be bound to each other.  However, if the other file is *already bound*, it will not
-be bound to the current view.  You can create "rings" this way, or have multiple files point to one file.
+Displays a picker so that you can bind two open files.  The other file will be opened. `goto: false` disables this feature. The first time you do this, the two files will be bound to each other.  However, if the other file is *already bound*, it will not be bound to the current view.  You can create "rings" this way, or have multiple files point to one file.
 
-If you have some text selected, it will bind those regions. For example, you might bind a django `views.py` file to the corresponding `models.py`,
-but you could bind specific view functions to templates, so depending on where the cursor is located you will go to a different file.
+If you have some text selected, it will bind those regions. For example, you might bind a django `views.py` file to the corresponding `models.py`, but you could bind specific view functions to templates, so depending on where the cursor is located you will go to a different file.
 
 Bindings are stored on the window, so as long as you don't close the project, you should retain your bindings.
 
