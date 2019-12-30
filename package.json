@@ -6,10 +6,6 @@
   "labels": ["file navigation"],
   "releases": [
     {
-      "details": "https://github.com/colinta/SublimeMarkAndMove/tree/st2",
-      "sublime_text": "<3000"
-    },
-    {
       "details": "https://github.com/colinta/SublimeMarkAndMove/tags",
       "sublime_text": ">=3000"
     }
