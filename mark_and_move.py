@@ -194,12 +194,14 @@ class MarkAndMoveSaveCommand(sublime_plugin.TextCommand):
 
 
 class MarkAndMoveRecallCommand(sublime_plugin.TextCommand):
-    def run(self, edit, clear=False):
+    def run(self, edit, clear=False, append=False):
         mark_and_move_marks = self.view.get_regions('mark_and_move')
         if not mark_and_move_marks:
             return
 
-        self.view.sel().clear()
+        if not append:
+            self.view.sel().clear()
+
         for region in mark_and_move_marks:
             self.view.sel().add(region)
 
