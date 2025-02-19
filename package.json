@@ -3,10 +3,12 @@
   "description": "Allows for keyboard-only multiple selections.  Select some stuff, mark it, then move the cursor around and add more marks, recall marks, or move between marks.",
   "author": "Colin T.A. Gray (colinta)",
   "details": "https://github.com/colinta/SublimeMarkAndMove",
-  "labels": ["file navigation"],
+  "labels": [
+    "file navigation"
+  ],
   "releases": [
     {
-      "details": "https://github.com/colinta/SublimeMarkAndMove/tags",
+      "tags": true,
       "sublime_text": ">=3000"
     }
   ]
