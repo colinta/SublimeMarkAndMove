@@ -6,7 +6,7 @@ Allows for keyboard-only multiple selections.  Select some stuff, mark it, then 
 Installation
 ------------
 
-1. Using Package Control, install "MarkAndMove"
+Using Package Control, install "MarkAndMove"
 
 Or:
 
@@ -83,7 +83,18 @@ Bindings are stored on the window, so as long as you don't close the project, yo
 
 If the current view is bound, it goes to the other view.  If it isn't bound, this command delegates to `mark_and_move_window_select`.
 
-TODO
-----
 
-* Have file-to-file bindings persist between sessions.  Can this be stored in a project config?
+Key Bindings
+------------
+
+Copy these to your user key bindings file.
+
+<!-- keybindings start -->
+    { "keys": ["ctrl+shift+tab"], "command": "mark_and_move_window_select" },
+    { "keys": ["ctrl+tab"], "command": "mark_and_move_window_toggle" },
+    { "keys": ["ctrl+m"], "command": "mark_and_move_do_it_all" },
+    { "keys": ["alt+m"], "command": "mark_and_move_next" },
+    { "keys": ["alt+shift+m"], "command": "mark_and_move_prev" },
+    { "keys": ["ctrl+shift+m"], "command": "mark_and_move_recall" },
+    { "keys": ["ctrl+alt+m"], "command": "mark_and_move_clear" },
+<!-- keybindings stop -->
